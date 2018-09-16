@@ -15,16 +15,16 @@ or
 
 Options are same as for the espota.py. Script will make basic check which options are specified.   
  * `-h` or `--help` for help
- * `-f` or `--file=` for file, otherwise script will try find compiled arduino sketch in /tmp directory
+ * `-f` or `--file=` for file, otherwise script will try to find compiled arduino sketch in /tmp directory
  * `-i` or `--ip=` for set IP address of ESP or use **User settings variables**
  * `-p` or `--port=` for set PORT of ESP or use **User settings variables**
 
 ## User settings variables
 
 Inside script you can find three user variables:   
- * `espota_path` - Uncomment this variable to set location of espota.py, otherwise the script will try find espota.py in your home directory.
- * `default_ip` - If you don't specify IP address using `-i` or `--ip=` option, the script will try use this variable.
- * `default_port` - If you don't specify PORT using `-p` or `--port=` option, the script will try use this variable.
+ * `espota_path` - Uncomment this variable to set location of espota.py, otherwise the script will try to find espota.py in your home directory.
+ * `default_ip` - If you don't specify IP address using `-i` or `--ip=` option, the script will try to use this variable.
+ * `default_port` - If you don't specify PORT using `-p` or `--port=` option, the script will try to use this variable.
 
 ## Example of usage
 
