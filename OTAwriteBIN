@@ -1,0 +1,152 @@
+#!/bin/bash
+
+#===================================================================================
+#title        : OTAwriteBIN
+#description  : Script for finding compiled sketch in /tmp directory and uploading it using OTA
+#author       : matrn
+#date         : 09/2018
+#version      : 1.1
+#usage        : bash OTAwriteBIN --help
+#source       : espota.py = https://github.com/esp8266/Arduino/blob/master/tools/espota.py
+#===================================================================================
+
+
+
+###USER SETTINGS###
+
+#espota_path="~/.espota/"
+#default_ip="192.168.1.100"
+default_port=8266
+
+###################
+
+
+
+
+
+#declare variables
+declare names
+declare paths
+declare fin_parameters
+
+file_in_param=false
+port_in_param=false
+ip_in_param=false
+
+
+arguments="$@"   #arguments gived to script
+
+
+
+#-----print help-----
+if [[ $arguments = *"--help"* ]] || [[ $arguments = *"-help"* ]] || [[ $arguments = *"-h"* ]]; then
+	#change directory to dir with espota.py program
+	if [ -z ${espota_path+x} ]; then
+		cd ~   #cd to home
+		cd ~/$(ls -a | grep ".arduino" | tail -1)/packages/esp8266/hardware/esp8266/
+		cd $(ls -a | tail -1)/tools/
+	else
+		cd $espota_path   #go to directory from espota-path variable
+	fi
+
+	python espota.py --help
+fi
+#-----print help-----
+
+
+#-----test which parameters user gived this script-----
+if [[ $arguments = *"-f "* ]] || [[ $arguments = *"--file="* ]]; then   #check if file is already specified in input parameters
+	file_in_param=true
+fi
+
+if [[ $arguments = *"-i "* ]] || [[ $arguments = *"--ip="* ]]; then   #check if IP address is already specified in input parameters
+	ip_in_param=true
+fi
+
+if [[ $arguments = *"-p "* ]] || [[ $arguments = *"--port="* ]]; then   #check if port is already specified in input parameters
+	port_in_param=true
+fi
+#-----test which parameters user gived this script-----
+
+
+
+#-----do basic parameters test-----
+if [[ "$ip_in_param" = false ]]; then   #if ip is not specified in parameters
+	if [ -z ${default_ip+x} ]; then   #check default_ip is declared
+		echo "Usage error: Please specify -i IP_address or declare default_ip variable!"
+		exit
+	else 
+		fin_parameters="$fin_parameters -i $default_ip"
+	fi
+fi
+
+if [[ "$port_in_param" = false ]]; then   #if port is not specified in parameters
+	if [ -z ${default_port+x} ]; then   #check if default_port is declared
+		echo "Usage error: Please specify -p PORT or declare default_port variable!"
+		exit
+	else 
+		fin_parameters="$fin_parameters -p $default_port"
+	fi
+fi
+#-----do basic parameters test-----
+
+
+pos=0   #position for saving avaialable files to array
+
+if [[ "$file_in_param" = false ]]; then   #check if user specified bin file location
+	for path in /tmp/*   #go through directory
+	do
+		if [[ $path = *"arduino_build_"* ]]; then   #find arduino directory
+			if [ -f "$path/"*".ino.bin" ]; then
+				paths[$pos]=$(ls "$path"/*.ino.bin)   #get path
+
+				cd $path   #change to tmp arduino directory
+				names[$pos]=$(ls *.ino.bin)   #get name
+
+		  		pos=$((pos+1))   #plus position
+		  	fi
+		fi
+		#echo $path
+	done
+
+
+	finPos=0   #variable for final position
+
+
+	PS3="Choose .bin file for OTA upload: "   #print user input text
+	select opt in "${names[@]}"   #select input
+	do  
+		for a in $(seq 0 $((pos-1)))
+		do
+	  		if [ "$opt" == "${names[$a]}" ]
+			then
+				finPos=$a
+	   			break 2
+	  		fi
+		done		
+	done
+
+
+	if [[ -f "${paths[$finPos]}" ]]; then   #check if we have some file available
+		echo "Uploading: ${paths[$finPos]}"   #print uploading text
+		fin_parameters="$fin_parameters -f ${paths[$finPos]}"   #add it to parameters
+	else   #else print error
+		echo "Error: No files are available in the / tmp directory. Do you have compiled sketch in Arduino IDE?"
+		exit
+	fi
+fi
+
+
+
+#change directory to dir with espota.py program
+if [ -z ${espota_path+x} ]; then
+	cd ~   #cd to home
+	cd ~/$(ls -a | grep ".arduino" | tail -1)/packages/esp8266/hardware/esp8266/
+	cd $(ls -a | tail -1)/tools/
+else
+	cd $espota_path   #go to directory from espota-path variable
+fi
+
+
+#finally run program!
+python espota.py $fin_parameters $arguments   #run espota.py program with parameters
