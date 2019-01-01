@@ -1,7 +1,7 @@
 OTA write BIN
 ==========
 
-This simple bash script will find compiled arduino sketch in /tmp directory and uploads it to ESP using espota.py program.
+This bash script will find compiled arduino sketch or SPIFFS image in /tmp directory and uploads it to ESP using espota.py program.
 
 ## Usage
 
@@ -31,11 +31,16 @@ Inside script you can find three user variables:
 ```
 matrn@matrn-PC ~ $ ./OTAwriteBIN -i 192.168.1.100   
 1) ESP_OTA.ino.bin   
+2) ESP_OTA.spiffs.bin
 Choose .bin file for OTA upload: 1   
 Uploading: /tmp/arduino_build_397672/ESP_OTA.ino.bin   
 Uploading..........................................................................................................................................................................   
 matrn@matrn-PC ~ $
 ```  
+
+## Installing SPIFFS FS to arduino IDE
+
+<a href="https://github.com/esp8266/arduino-esp8266fs-plugin">https://github.com/esp8266/arduino-esp8266fs-plugin</a>
 
 ## espota.py source
 

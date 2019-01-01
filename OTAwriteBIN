@@ -96,15 +96,26 @@ pos=0   #position for saving avaialable files to array
 if [[ "$file_in_param" = false ]]; then   #check if user specified bin file location
 	for path in /tmp/*   #go through directory
 	do
-		if [[ $path = *"arduino_build_"* ]]; then   #find arduino directory
+		if [[ $path = *"arduino_build_"* ]]; then   #find arduino sketch directory
 			if [ -f "$path/"*".ino.bin" ]; then
 				paths[$pos]=$(ls "$path"/*.ino.bin)   #get path
 
 				cd $path   #change to tmp arduino directory
 				names[$pos]=$(ls *.ino.bin)   #get name
 
-		  		pos=$((pos+1))   #plus position
-		  	fi
+				pos=$((pos+1))   #plus position
+			fi
+		fi
+
+		if [[ $path = *"build"*".spiffs" ]]; then   #find arduino spiffs directory
+			if [ -f "$path/"*".spiffs.bin" ]; then
+				paths[$pos]=$(ls "$path"/*.spiffs.bin)   #get path
+
+				cd $path   #change to tmp arduino directory
+				names[$pos]=$(ls *.spiffs.bin)   #get name
+
+				pos=$((pos+1))   #plus position
+			fi
 		fi
 		#echo $path
 	done
@@ -118,11 +129,11 @@ if [[ "$file_in_param" = false ]]; then   #check if user specified bin file loca
 	do  
 		for a in $(seq 0 $((pos-1)))
 		do
-	  		if [ "$opt" == "${names[$a]}" ]
+			if [ "$opt" == "${names[$a]}" ]
 			then
 				finPos=$a
-	   			break 2
-	  		fi
+	 			break 2
+			fi
 		done		
 	done
 
@@ -149,4 +160,9 @@ fi
 
 
 #finally run program!
-python espota.py $fin_parameters $arguments   #run espota.py program with parameters
+if [[ $fin_parameters = *".spiffs."* ]]; then   #check if user choosed spiffs image
+	echo "Uploading SPIFFS image"
+	python espota.py -s $fin_parameters $arguments   #run espota.py program with parameters
+else
+	python espota.py $fin_parameters $arguments   #run espota.py program with parameters
+fi
