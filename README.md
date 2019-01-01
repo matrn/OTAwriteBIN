@@ -11,6 +11,11 @@ or
 `chmod +x OTAwriteBIN`   #make script executeable   
 `./OTAwriteBIN`   #run script   
 
+## How to get compiled sketch or SPIFFS image using Arduino IDE
+
+ * For compiling sketch click in Sketch tab to `Verify/Compile` (or CTRL+R)
+ * For building SPIFFS image click in Tools tab to `ESP8266 Sketch Data Upload`, Arduino IDE will show error `SPIFFS Upload failed!` but SPIFFS image will be saved in /tmp directory
+
 ## Options
 
 Options are same as for the espota.py. Script will make basic check which options are specified.   
@@ -38,7 +43,7 @@ Uploading.......................................................................
 matrn@matrn-PC ~ $
 ```  
 
-## Installing SPIFFS FS to arduino IDE
+## Installing SPIFFS FS to Arduino IDE
 
 <a href="https://github.com/esp8266/arduino-esp8266fs-plugin">https://github.com/esp8266/arduino-esp8266fs-plugin</a>
 
