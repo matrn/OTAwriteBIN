@@ -13,8 +13,8 @@ or
 
 ## How to get compiled sketch or SPIFFS image using Arduino IDE
 
- * For compiling sketch click in `Sketch` tab to `Verify/Compile` (or press CTRL+R)
- * For building SPIFFS image click in `Tools` tab to `ESP8266 Sketch Data Upload`, Arduino IDE will show error `SPIFFS Upload failed!` but SPIFFS image will be saved in /tmp directory
+ * For compiling sketch click in Sketch tab to `Verify/Compile` (or press CTRL+R)
+ * For building SPIFFS image click in Tools tab to `ESP8266 Sketch Data Upload`, Arduino IDE will show error `SPIFFS Upload failed!` but SPIFFS image will be saved in /tmp directory
 
 ## Options
 
